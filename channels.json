@@ -1,8 +1,12 @@
 {
-  "_comment": "Add real Twitch usernames here (the part after twitch.tv/ in their URL). No API keys needed - these get embedded directly. If a channel happens to be offline when it's picked, the player will just show offline and the next jump will move on.",
+  "_comment": "Add real usernames here (the part after twitch.tv/ or kick.com/ in their URL). No API keys needed - these get embedded directly. If a channel happens to be offline when it's picked, the player will just show offline and the next jump will move on. Kick has no 'what's live' API at all, so Kick channels are always this hand-picked list, never auto-discovered.",
   "twitch": [
     "example_channel_1",
     "example_channel_2",
     "example_channel_3"
+  ],
+  "kick": [
+    "example_kick_channel_1",
+    "example_kick_channel_2"
   ]
 }

@@ -5,7 +5,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const Filter = require('bad-words');
 
-const { fetchLiveChannels, MOCK_MODE, MODE, CATEGORY } = require('./twitch');
+const { fetchLiveChannels, MODE, CATEGORY } = require('./twitch');
 
 const PORT = process.env.PORT || 3000;
 const JUMP_INTERVAL_MS = (Number(process.env.JUMP_INTERVAL_SECONDS) || 45) * 1000;
@@ -62,7 +62,6 @@ function broadcastChannel() {
   io.emit('channel', {
     channel: currentChannel,
     nextJumpAt,
-    mockMode: MOCK_MODE,
     category: CATEGORY,
   });
 }
@@ -140,7 +139,6 @@ io.on('connection', (socket) => {
   socket.emit('channel', {
     channel: currentChannel,
     nextJumpAt,
-    mockMode: MOCK_MODE,
     category: CATEGORY,
   });
   broadcastVoteTally();

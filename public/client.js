@@ -136,14 +136,15 @@ els.stickerToggle.addEventListener('click', () => {
 });
 
 // ---- Channel / player ----------------------------------------------------
-function renderChannel({ channel, nextJumpAt: nextAt, mockMode, category }) {
-  els.mockBanner.hidden = !mockMode;
+function renderChannel({ channel, nextJumpAt: nextAt, category }) {
   els.categoryLabel.textContent = `Category: ${category}`;
   nextJumpAt = nextAt;
   currentChannelData = channel;
   hasVotedThisChannel = false;
   setVoteButtonsEnabled(true);
   els.voteResult.hidden = true;
+
+  els.mockBanner.hidden = !channel || channel.platform !== 'mock';
 
   if (!channel) {
     els.streamerName.textContent = 'No live channels right now';
@@ -156,15 +157,22 @@ function renderChannel({ channel, nextJumpAt: nextAt, mockMode, category }) {
   els.streamTitle.textContent = channel.title || '';
   els.streamViewers.textContent = channel.viewers != null ? `${channel.viewers.toLocaleString()} watching` : '';
 
-  if (mockMode) {
+  if (channel.platform === 'mock') {
     els.twitchPlayer.hidden = true;
     els.mockPlayer.hidden = false;
     els.mockTitle.textContent = `(demo) ${channel.displayName} - ${channel.title}`;
   } else {
     els.mockPlayer.hidden = true;
     els.twitchPlayer.hidden = false;
-    const parent = window.location.hostname || 'localhost';
-    els.twitchPlayer.src = `https://player.twitch.tv/?channel=${encodeURIComponent(channel.login)}&parent=${parent}&muted=false`;
+    // Load muted: browsers block autoplay-with-sound on a freshly loaded
+    // video, which otherwise made the stream silently fail to play on some
+    // jumps. Viewers can unmute via the player's own speaker icon.
+    if (channel.platform === 'kick') {
+      els.twitchPlayer.src = `https://player.kick.com/${encodeURIComponent(channel.login)}?autoplay=true&muted=true`;
+    } else {
+      const parent = window.location.hostname || 'localhost';
+      els.twitchPlayer.src = `https://player.twitch.tv/?channel=${encodeURIComponent(channel.login)}&parent=${parent}&muted=true`;
+    }
   }
 }
 
