@@ -13,6 +13,8 @@ const els = {
   streamerName: document.getElementById('streamerName'),
   streamTitle: document.getElementById('streamTitle'),
   streamViewers: document.getElementById('streamViewers'),
+  playerHost: document.getElementById('playerHost'),
+  resizeHandle: document.getElementById('resizeHandle'),
   countdown: document.getElementById('countdown'),
   fireBtn: document.getElementById('fireBtn'),
   skipBtn: document.getElementById('skipBtn'),
@@ -246,3 +248,57 @@ setInterval(() => {
   const secondsLeft = Math.max(0, Math.round((nextJumpAt - Date.now()) / 1000));
   els.countdown.textContent = secondsLeft;
 }, 250);
+
+// ---- Resizable video player ------------------------------------------------
+const MIN_PLAYER_HEIGHT = 200;
+
+function applyPlayerHeight(px) {
+  els.playerHost.style.flex = '0 0 auto';
+  els.playerHost.style.height = `${px}px`;
+}
+
+function clearPlayerHeight() {
+  els.playerHost.style.flex = '';
+  els.playerHost.style.height = '';
+}
+
+(function restoreSavedPlayerHeight() {
+  try {
+    const saved = localStorage.getItem('streamsurf_player_height');
+    if (saved) applyPlayerHeight(Number(saved));
+  } catch { /* ignore */ }
+})();
+
+let dragging = false;
+
+function startDrag() { dragging = true; document.body.style.cursor = 'row-resize'; }
+function stopDrag() {
+  if (!dragging) return;
+  dragging = false;
+  document.body.style.cursor = '';
+  try {
+    localStorage.setItem('streamsurf_player_height', String(els.playerHost.getBoundingClientRect().height));
+  } catch { /* ignore */ }
+}
+function dragTo(clientY) {
+  if (!dragging) return;
+  const top = els.playerHost.getBoundingClientRect().top;
+  const maxHeight = window.innerHeight * 0.85;
+  const height = Math.min(maxHeight, Math.max(MIN_PLAYER_HEIGHT, clientY - top));
+  applyPlayerHeight(height);
+}
+
+els.resizeHandle.addEventListener('mousedown', startDrag);
+window.addEventListener('mousemove', (e) => dragTo(e.clientY));
+window.addEventListener('mouseup', stopDrag);
+
+els.resizeHandle.addEventListener('touchstart', startDrag, { passive: true });
+window.addEventListener('touchmove', (e) => {
+  if (dragging && e.touches[0]) dragTo(e.touches[0].clientY);
+}, { passive: true });
+window.addEventListener('touchend', stopDrag);
+
+els.resizeHandle.addEventListener('dblclick', () => {
+  clearPlayerHeight();
+  try { localStorage.removeItem('streamsurf_player_height'); } catch { /* ignore */ }
+});

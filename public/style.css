@@ -91,10 +91,26 @@ body {
   position: relative;
   width: 100%;
   flex: 1 1 auto;
-  min-height: 240px;
+  min-height: 200px;
   max-height: 75vh;
   background: #000;
 }
+
+.resize-handle {
+  height: 14px;
+  flex: 0 0 auto;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: row-resize;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 2px;
+  user-select: none;
+}
+.resize-handle:hover { color: var(--accent); }
 
 .player-host iframe {
   width: 100%;
