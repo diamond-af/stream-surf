@@ -249,56 +249,67 @@ setInterval(() => {
   els.countdown.textContent = secondsLeft;
 }, 250);
 
-// ---- Resizable video player ------------------------------------------------
+// ---- Resizable video player (both width and height, from the corner) ------
 const MIN_PLAYER_HEIGHT = 200;
+const MIN_PLAYER_WIDTH = 320;
 
-function applyPlayerHeight(px) {
+function applyPlayerSize(width, height) {
   els.playerHost.style.flex = '0 0 auto';
-  els.playerHost.style.height = `${px}px`;
+  els.playerHost.style.width = `${width}px`;
+  els.playerHost.style.height = `${height}px`;
 }
 
-function clearPlayerHeight() {
+function clearPlayerSize() {
   els.playerHost.style.flex = '';
+  els.playerHost.style.width = '';
   els.playerHost.style.height = '';
 }
 
-(function restoreSavedPlayerHeight() {
+(function restoreSavedPlayerSize() {
   try {
-    const saved = localStorage.getItem('streamsurf_player_height');
-    if (saved) applyPlayerHeight(Number(saved));
+    const savedWidth = localStorage.getItem('streamsurf_player_width');
+    const savedHeight = localStorage.getItem('streamsurf_player_height');
+    if (savedWidth && savedHeight) applyPlayerSize(Number(savedWidth), Number(savedHeight));
   } catch { /* ignore */ }
 })();
 
 let dragging = false;
 
-function startDrag() { dragging = true; document.body.style.cursor = 'row-resize'; }
+function startDrag() { dragging = true; document.body.style.cursor = 'nwse-resize'; }
 function stopDrag() {
   if (!dragging) return;
   dragging = false;
   document.body.style.cursor = '';
   try {
-    localStorage.setItem('streamsurf_player_height', String(els.playerHost.getBoundingClientRect().height));
+    const rect = els.playerHost.getBoundingClientRect();
+    localStorage.setItem('streamsurf_player_width', String(rect.width));
+    localStorage.setItem('streamsurf_player_height', String(rect.height));
   } catch { /* ignore */ }
 }
-function dragTo(clientY) {
+function dragTo(clientX, clientY) {
   if (!dragging) return;
-  const top = els.playerHost.getBoundingClientRect().top;
+  const { top, left } = els.playerHost.getBoundingClientRect();
   const maxHeight = window.innerHeight * 0.85;
+  const maxWidth = els.playerHost.parentElement.getBoundingClientRect().width;
   const height = Math.min(maxHeight, Math.max(MIN_PLAYER_HEIGHT, clientY - top));
-  applyPlayerHeight(height);
+  const width = Math.min(maxWidth, Math.max(MIN_PLAYER_WIDTH, clientX - left));
+  applyPlayerSize(width, height);
 }
 
 els.resizeHandle.addEventListener('mousedown', startDrag);
-window.addEventListener('mousemove', (e) => dragTo(e.clientY));
+window.addEventListener('mousemove', (e) => dragTo(e.clientX, e.clientY));
 window.addEventListener('mouseup', stopDrag);
 
 els.resizeHandle.addEventListener('touchstart', startDrag, { passive: true });
 window.addEventListener('touchmove', (e) => {
-  if (dragging && e.touches[0]) dragTo(e.touches[0].clientY);
+  if (dragging && e.touches[0]) dragTo(e.touches[0].clientX, e.touches[0].clientY);
 }, { passive: true });
 window.addEventListener('touchend', stopDrag);
 
 els.resizeHandle.addEventListener('dblclick', () => {
-  clearPlayerHeight();
-  try { localStorage.removeItem('streamsurf_player_height'); } catch { /* ignore */ }
+  clearPlayerSize();
+  try {
+    localStorage.removeItem('streamsurf_player_width');
+    localStorage.removeItem('streamsurf_player_height');
+  } catch { /* ignore */ }
 });

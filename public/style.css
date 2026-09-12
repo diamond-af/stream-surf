@@ -102,7 +102,7 @@ body {
   bottom: 4px;
   width: 18px;
   height: 18px;
-  cursor: ns-resize;
+  cursor: nwse-resize;
   user-select: none;
   background:
     linear-gradient(135deg, transparent 0 40%, var(--muted) 40% 46%, transparent 46% 60%, var(--muted) 60% 66%, transparent 66% 80%, var(--muted) 80% 86%, transparent 86%);
