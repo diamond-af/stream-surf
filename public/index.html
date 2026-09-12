@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StreamSurf</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">📺 <span>StreamSurf</span></div>
+    <div class="meta">
+      <span id="categoryLabel">Category: -</span>
+      <span id="viewerCount">0 watching</span>
+      <span class="you-badge">🏆 <span id="yourPoints">0</span> pts</span>
+      <button id="nicknameBtn" class="nickname-btn">👤 <span id="nicknameLabel">Surfer</span></button>
+    </div>
+  </header>
+
+  <div id="mockBanner" class="mock-banner" hidden>
+    Demo mode: showing fake channels. Add real Twitch API keys in <code>.env</code> to go live.
+  </div>
+
+  <main class="layout">
+    <section class="player-pane">
+      <div id="playerHost" class="player-host">
+        <div id="mockPlayer" class="mock-player" hidden>
+          <div class="mock-player-emoji">🎬</div>
+          <div id="mockTitle" class="mock-title">Loading...</div>
+        </div>
+        <iframe
+          id="twitchPlayer"
+          hidden
+          allowfullscreen
+          scrolling="no"
+          frameborder="0">
+        </iframe>
+      </div>
+
+      <div class="stream-info">
+        <div>
+          <div id="streamerName" class="streamer-name">Connecting...</div>
+          <div id="streamTitle" class="stream-title"></div>
+        </div>
+        <div id="streamViewers" class="stream-viewers"></div>
+      </div>
+
+      <div class="jump-bar">
+        <div class="countdown">
+          Next jump in <span id="countdown">--</span>s
+        </div>
+        <div class="vote-buttons">
+          <button id="fireBtn" class="vote-btn fire">🔥 Keep (<span id="fireTally">0</span>)</button>
+          <button id="skipBtn" class="vote-btn skip">💀 Skip (<span id="skipTally">0</span>/<span id="skipNeeded">0</span>)</button>
+        </div>
+        <button id="shareBtn" class="share-btn">🔗 Share this moment</button>
+      </div>
+      <div id="voteResult" class="vote-result" hidden></div>
+    </section>
+
+    <aside class="chat-pane">
+      <div class="leaderboard">
+        <div class="leaderboard-title">🏆 Top surfers</div>
+        <ol id="leaderboardList" class="leaderboard-list"></ol>
+      </div>
+      <div id="chatLog" class="chat-log"></div>
+      <div id="stickerPanel" class="sticker-panel" hidden></div>
+      <form id="chatForm" class="chat-form">
+        <button type="button" id="stickerToggle" class="sticker-toggle">🎭</button>
+        <input id="chatInput" type="text" maxlength="240" placeholder="Say something to everyone watching..." autocomplete="off" />
+        <button type="submit">Send</button>
+      </form>
+    </aside>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>

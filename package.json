@@ -1,0 +1,16 @@
+{
+  "name": "stream-surf",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Auto-jumping live stream viewer with a shared chat and vote-to-skip",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "bad-words": "^3.0.4",
+    "dotenv": "^16.4.5"
+  }
+}
