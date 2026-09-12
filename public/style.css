@@ -97,20 +97,21 @@ body {
 }
 
 .resize-handle {
-  height: 14px;
-  flex: 0 0 auto;
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: row-resize;
-  color: var(--muted);
-  font-size: 10px;
-  letter-spacing: 2px;
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 18px;
+  height: 18px;
+  cursor: ns-resize;
   user-select: none;
+  background:
+    linear-gradient(135deg, transparent 0 40%, var(--muted) 40% 46%, transparent 46% 60%, var(--muted) 60% 66%, transparent 66% 80%, var(--muted) 80% 86%, transparent 86%);
+  opacity: 0.6;
+  border-radius: 2px;
 }
-.resize-handle:hover { color: var(--accent); }
+.resize-handle:hover { opacity: 1; background:
+    linear-gradient(135deg, transparent 0 40%, var(--accent) 40% 46%, transparent 46% 60%, var(--accent) 60% 66%, transparent 66% 80%, var(--accent) 80% 86%, transparent 86%);
+}
 
 .player-host iframe {
   width: 100%;
