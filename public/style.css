@@ -83,12 +83,16 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .player-host {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  flex: 1 1 auto;
+  min-height: 240px;
+  max-height: 75vh;
   background: #000;
 }
 
